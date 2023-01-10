@@ -88,19 +88,14 @@ func (evtStream *EventStream) flush() {
 	evtStream.flusher.Flush()
 }
 
-// WriteHeadersWithStatusCode send event stream content headers and status line with
-// given HTTP status code.
-func (evtStream *EventStream) WriteHeadersWithStatusCode(statusCode int) {
+// WriteHeaders send event stream content headers and `200 OK` status line.
+// Per spec, event stream must have 200 status. Other status cannot stream events.
+func (evtStream *EventStream) WriteHeaders() {
 	w := evtStream.w
 	w.Header().Set("Cache-Control", "no-store")
 	w.Header().Set("Content-Type", "text/event-stream")
 	w.Header().Set("Connection", "keep-alive")
-	w.WriteHeader(statusCode)
-}
-
-// WriteHeaders send event stream content headers and status line.
-func (evtStream *EventStream) WriteHeaders(statusCode int) {
-	evtStream.WriteHeadersWithStatusCode(http.StatusOK)
+	w.WriteHeader(http.StatusOK)
 }
 
 // AdviseRetry emit retry message to client.
