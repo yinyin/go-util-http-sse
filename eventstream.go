@@ -76,6 +76,7 @@ type EventStream struct {
 func NewEventStream(w http.ResponseWriter) (evtStream *EventStream) {
 	flusher, _ := w.(http.Flusher)
 	evtStream = &EventStream{
+		w:       w,
 		flusher: flusher,
 	}
 	return
