@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+
+	<script>
+		const evtSrc = new EventSource("/endpoint/sse");
+		evtSrc.onerror = (err) => {
+			console.error("event source failed:", err);
+		};
+		evtSrc.addEventListener("part0", (event) => {
+			const d = JSON.parse(event.data);
+			const cycleElem = document.getElementById("cycle-p0");
+			const tickElem = document.getElementById("tick-p0");
+			const rawElem = document.getElementById("raw-p0");
+			cycleElem.textContent = d.Cycle;
+			tickElem.textContent = d.Tick;
+			rawElem.textContent = event.data;
+		});
+		evtSrc.addEventListener("part1", (event) => {
+			const d = JSON.parse(event.data);
+			const cycleElem = document.getElementById("cycle-p1");
+			const tickElem = document.getElementById("tick-p1");
+			const identElem = document.getElementById("ident-p1");
+			const rawElem = document.getElementById("raw-p1");
+			cycleElem.textContent = d.Cycle;
+			tickElem.textContent = d.Tick;
+			rawElem.textContent = event.data;
+		});
+		evtSrc.addEventListener("part2", (event) => {
+			const rawElem = document.getElementById("part2");
+			rawElem.textContent = event.data;
+		});
+		evtSrc.addEventListener("part3", (event) => {
+			const rawElem = document.getElementById("part3");
+			rawElem.textContent = event.data;
+		});
+	</script>
+</head>
+
+<body>
+	<dl>
+		<dt>Part 0 (SendJSON):</dt>
+		<dd>
+			<ul>
+				<li>Cycle: <span id="cycle-p0"></span></li>
+				<li>Tick: <span id="tick-p0"></span></li>
+				<li>
+					Raw JSON:
+					<pre id="raw-p0"></pre>
+				</li>
+			</ul>
+		</dd>
+		<dt>Part 1 (SendJSON with ID):</dt>
+		<dd>
+			<ul>
+				<li>Cycle: <span id="cycle-p1"></span></li>
+				<li>Tick: <span id="tick-p1"></span></li>
+				<li>Ident: <span id="ident-p1"></span></li>
+				<li>
+					Raw JSON:
+					<pre id="raw-p1"></pre>
+				</li>
+			</ul>
+		</dd>
+		<dt>Part 2 (SendString):</dt>
+		<dd>
+			<span id="part2"></span>
+		</dd>
+		<dt>Part 3 (SendString with ID):</dt>
+		<dd>
+			<span id="part3"></span>
+		</dd>
+	</dl>
+</body>
+
+</html>
